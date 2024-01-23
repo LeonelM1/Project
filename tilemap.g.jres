@@ -1,0 +1,53 @@
+{
+    "transparency16": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true
+    },
+    "level1": {
+        "id": "level1",
+        "mimeType": "application/mkcd-tilemap",
+        "data": "MTAxMDAwMTAwMDAyMGIwMjAyMDIwMjBiMDIwMjBiMDIwMjBiMDIwMjBiMGIwMTA4MDgwODA4MDgwODA4MDgwODA4MDgwODA0MDIwMjA5MDMwMzAyMDMwMzAzMDMwMzAzMDMwMzAzMGEwMjAyMDIwMjAyMDIwMzAzMDMwMzAzMDMwMzAzMDMwYTAyMGIwOTAzMDMwMzAzMDMwMzAzMDMwMzAzMDMwMzBhMDIwMjA5MDIwMjAzMDMwMzAzMDMwMzAzMDMwMzAzMGEwMjAyMDkwMzAyMDIwMjAzMDMwMzAzMDMwMzAzMDMwYTBiMDIwMTAzMDMwMzAyMDIwMzAzMDMwMzAzMDMwMzBhMDIwMjA5MDMwMzAzMDMwMjAzMDMwMzAzMDMwMzAzMGEwYjBiMDIwMjAyMDIwMjAyMDMwMzAzMDIwMjAyMDIwMjAyMDIwOTAzMDMwMzAzMDMwMzAzMDMwMjAzMDMwMzBhMDIwMjA5MDMwMzAzMDMwMzAzMDMwMzAzMDMwMTAzMGEwMjBiMDkwMzAzMDMwMzAzMDMwMzAzMDIwMzAzMDMwYTBiMDIwOTAzMDMwMzAzMDMwMzAzMDMwMjAyMDIwMjAyMDIwMjA1MDcwNzA3MDcwNzA3MDcwNzA3MDcwNzA3MDYwMjBiMDIwYjAyMDIwYjAyMDIwYjAyMDIwYjAyMDIwYjAyMjIyMjIyMjIyMjIyMjIyMjAyMDAwMDAwMDAwMDAwMjAwMjAwMDIwMDAwMDAwMDIwMjIyMjAyMDAwMDAwMDAyMDAyMDAwMDAwMDAwMDAwMjAwMjIyMDAwMDAwMDAwMDIwMDIyMDIyMDAwMDAwMDAyMDAyMDAyMDAyMDAwMDAwMjAwMjAwMDAwMjAwMDAwMDIwMjIyMjIyMDIwMDIyMjIyMjAyMDAwMDAwMDAwMjAwMjAwMjAwMDAwMDAwMDAwMDIwMDIwMDAwMDAwMDAyMDAyMDAyMDAwMDAwMDAyMjIyMjIwMjAwMDAwMDAwMDAwMDIwMjIyMjIyMjIyMjIyMjIyMg==",
+        "tileset": [
+            "myTiles.transparency16",
+            "sprites.dungeon.chestClosed",
+            "sprites.dungeon.floorLight0",
+            "sprites.dungeon.darkGroundSouthEast1",
+            "sprites.dungeon.darkGroundNorthEast0",
+            "sprites.dungeon.darkGroundSouthWest0",
+            "sprites.dungeon.darkGroundSouthEast0",
+            "sprites.dungeon.darkGroundSouth",
+            "sprites.dungeon.darkGroundNorth",
+            "sprites.dungeon.darkGroundWest",
+            "sprites.dungeon.darkGroundEast",
+            "sprites.dungeon.floorLight1"
+        ],
+        "displayName": "level1"
+    },
+    "level2": {
+        "id": "level2",
+        "mimeType": "application/mkcd-tilemap",
+        "data": "MTAxMDAwMTAwMDAxMGEwMTAxMDEwMTBhMDEwMTBhMDEwMTBhMDEwMTBhMGEwYzA3MDcwNzA3MDcwNzA3MDcwNzA3MDcwNzAzMDEwMTA4MDIwMjBiMDIwMjAyMDIwMjAyMDIwMjAyMDkwMTAxMGIwYjBiMGIwMjAyMDIwMjAyMDIwMjAyMDIwOTAxMGEwODAyMGIwMjAyMDIwMjAyMDIwMjAyMDIwMjA5MDEwMTA4MGIwYjBiMDIwMjAyMDIwMjAyMDIwMjAyMDkwMTAxMDgwYjBiMGIwYjAyMDIwMjAyMDIwMjAyMDIwOTBhMDEwODBiMDIwMjBiMGIwMjAyMDIwMjAyMDIwMjA5MDEwMTA4MDIwMjAyMDIwYjAyMDIwMjAyMDIwMjAyMDkwYTBhMGIwYjBiMGIwYjBiMDIwMjAyMGIwYjBiMGIwOTAxMDEwODAyMDIwMjAyMDIwMjAyMDIwYjAyMDIwMjA5MDEwMTA4MDIwMjAyMDIwMjAyMDIwMjAyMDIwYjAyMDkwMTBhMDgwMjAyMDIwMjAyMDIwMjAyMGIwMjBiMDIwOTBhMDEwODAyMDIwMjAyMDIwMjAyMDIwYjBiMGIwYjA5MDEwMTA0MDYwNjA2MDYwNjA2MDYwNjA2MDYwNjA2MDUwMTBhMDEwYTAxMDEwYTAxMDEwYTAxMDEwYTAxMDEwYTAxMjIyMjIyMjIyMjIyMjIyMjAyMDAwMDAwMDAwMDAwMjAwMjAwMDAwMDAwMDAwMDIwMDIwMDAwMDAwMDAwMDAyMDAyMDAwMDAwMDAwMDAwMjAwMjAwMDAwMDAwMDAwMDIwMDIwMDAwMDAwMDAwMDAyMDAyMDAwMDAwMDAwMDAwMjAwMjAwMDAwMDAwMDAwMDIwMDIwMDAwMDAwMDAwMDAyMDAyMDAwMDAwMDAwMDAwMjAwMjAwMDAwMDAwMDAwMDIwMDIwMDAwMDAwMDAwMDAyMDAyMDAwMDAwMDAwMDAwMjAwMjAwMDAwMDAwMDAwMDIwMjIyMjIyMjIyMjIyMjIyMg==",
+        "tileset": [
+            "myTiles.transparency16",
+            "sprites.dungeon.floorLight0",
+            "sprites.dungeon.darkGroundSouthEast1",
+            "sprites.dungeon.darkGroundNorthEast0",
+            "sprites.dungeon.darkGroundSouthWest0",
+            "sprites.dungeon.darkGroundSouthEast0",
+            "sprites.dungeon.darkGroundSouth",
+            "sprites.dungeon.darkGroundNorth",
+            "sprites.dungeon.darkGroundWest",
+            "sprites.dungeon.darkGroundEast",
+            "sprites.dungeon.floorLight1",
+            "sprites.dungeon.darkGroundCenter",
+            "sprites.dungeon.darkGroundNorthWest0"
+        ],
+        "displayName": "template"
+    },
+    "*": {
+        "mimeType": "image/x-mkcd-f4",
+        "dataEncoding": "base64",
+        "namespace": "myTiles"
+    }
+}
