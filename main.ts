@@ -1,3 +1,26 @@
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    projectile2 = sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . 2 2 . . . . . . . 
+        . . . . . . 3 1 1 3 . . . . . . 
+        . . . . . 2 1 1 1 1 2 . . . . . 
+        . . . . . 2 1 1 1 1 2 . . . . . 
+        . . . . . . 3 1 1 3 . . . . . . 
+        . . . . . . . 2 2 . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, mySprite, 0, -50)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Player, function (sprite, otherSprite) {
+	
+})
 function buildRoom (numChests: number) {
     for (let index = 0; index < numChests; index++) {
         r = randint(4, 11)
@@ -39,12 +62,15 @@ function buildRoom (numChests: number) {
         }
     }
 }
+let bat: Sprite = null
 let direction = ""
 let rand = 0
 let c = 0
 let r = 0
+let projectile2: Sprite = null
+let mySprite: Sprite = null
 tiles.setCurrentTilemap(tilemap`template`)
-let mySprite = sprites.create(img`
+mySprite = sprites.create(img`
     . . . . . f f f f . . . . . . . 
     . . . f f e e e e f f . . . . . 
     . . f e e e f f e e e f . . . . 
@@ -63,188 +89,34 @@ let mySprite = sprites.create(img`
     . . . . f f . . f f . . . . . . 
     `, SpriteKind.Player)
 tiles.placeOnRandomTile(mySprite, sprites.dungeon.darkGroundSouthEast1)
+info.setLife(3)
 controller.moveSprite(mySprite, 100, 100)
 scene.cameraFollowSprite(mySprite)
 buildRoom(3)
-animation.runImageAnimation(
-sprites.create(img`
-    . . f f f . . . . . . . . f f f 
-    . f f c c . . . . . . f c b b c 
-    f f c c . . . . . . f c b b c . 
-    f c f c . . . . . . f b c c c . 
-    f f f c c . c c . f c b b c c . 
-    f f c 3 c c 3 c c f b c b b c . 
-    f f b 3 b c 3 b c f b c c b c . 
-    . c 1 b b b 1 b c b b c c c . . 
-    . c 1 b b b 1 b b c c c c . . . 
-    c b b b b b b b b b c c . . . . 
-    c b 1 f f 1 c b b b b f . . . . 
-    f f 1 f f 1 f b b b b f c . . . 
-    f f 2 2 2 2 f b b b b f c c . . 
-    . f 2 2 2 2 b b b b c f . . . . 
-    . . f b b b b b b c f . . . . . 
-    . . . f f f f f f f . . . . . . 
-    `, SpriteKind.Enemy),
-[img`
-    f f f . . . . . . . . f f f . . 
-    c b b c f . . . . . . c c f f . 
-    . c b b c f . . . . . . c c f f 
-    . c c c b f . . . . . . c f c f 
-    . c c b b c f . c c . c c f f f 
-    . c b b c b f c c 3 c c 3 c f f 
-    . c b c c b f c b 3 c b 3 b f f 
-    . . c c c b b c b 1 b b b 1 c . 
-    . . . c c c c b b 1 b b b 1 c . 
-    . . . . c c b b b b b b b b b c 
-    . . . . f b b b b c 1 f f 1 b c 
-    . . . c f b b b b f 1 f f 1 f f 
-    . . c c f b b b b f 2 2 2 2 f f 
-    . . . . f c b b b b 2 2 2 2 f . 
-    . . . . . f c b b b b b b f . . 
-    . . . . . . f f f f f f f . . . 
-    `,img`
-    . . . . . . . . . . . f f f . . 
-    f f f . . . . . . . . c c f f f 
-    c b b c f . . . c c . c c c f f 
-    . c b b b f f c c 3 c c 3 c f f 
-    . c c c b b f c b 3 c b 3 c f f 
-    . c c b c b f c b b b b b b c f 
-    . c b b c b b c b 1 b b b 1 c c 
-    . c b c c c b b b b b b b b b c 
-    . . c c c c c b b c 1 f f 1 b c 
-    . . . c f b b b b f 1 f f 1 f c 
-    . . . c f b b b b f f f f f f f 
-    . . c c f b b b b f 2 2 2 2 f f 
-    . . . . f c b b b 2 2 2 2 2 f . 
-    . . . . . f c b b b 2 2 2 f . . 
-    . . . . . . f f f f f f f . . . 
-    . . . . . . . . . . . . . . . . 
-    `,img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . c c . c c . . . 
-    . . . . . . c c c 3 c c 3 f . . 
-    . . . . . c c c b 3 c b 3 c f . 
-    . . . . f f b b b b b b b b c f 
-    . . . . f f b b b 1 b b b 1 c c 
-    . . . f f f c b b b b b b b b c 
-    . . . f f f f b b c 1 f f 1 b c 
-    . . . b b b c c b f 1 f f 1 f f 
-    . . . c c c c f b f f f f f f f 
-    . . c c c b b f b f 2 2 2 2 f f 
-    . . . c b b c c b 2 2 2 2 2 f . 
-    . . c b b c c f f b 2 2 2 f . . 
-    . c c c c c f f f f f f f . . . 
-    c c c c . . . . . . . . . . . . 
-    `,img`
-    . f f f . . . . . . . . f f f . 
-    . c b b c f . . . . . . . c f f 
-    . . c b b c f . . . . . . c c f 
-    . . c c c b f . . . . . . . f c 
-    . . c c b b f f . . . . . f f c 
-    . . c b b c b f c c . c c f f f 
-    . . c b c c b f c c c c c f f f 
-    . . . c c c b c b 3 c c 3 c f . 
-    . . . c c c c b b 3 c b 3 b c . 
-    . . . . c c b b b b b b b b c c 
-    . . . c f b b b 1 1 b b b 1 1 c 
-    . . c c f b b b b b b b b b b f 
-    . . . . f b b b b c b b b c b f 
-    . . . . f c b b b 1 f f f 1 f . 
-    . . . . . f c b b b b b b f . . 
-    . . . . . . f f f f f f f . . . 
-    `],
-100,
-true
-)
-animation.runImageAnimation(
-sprites.create(img`
-    . . f f f . . . . . . . . f f f 
-    . f f c c . . . . . . f c b b c 
-    f f c c . . . . . . f c b b c . 
-    f c f c . . . . . . f b c c c . 
-    f f f c c . c c . f c b b c c . 
-    f f c 3 c c 3 c c f b c b b c . 
-    f f b 3 b c 3 b c f b c c b c . 
-    . c 1 b b b 1 b c b b c c c . . 
-    . c 1 b b b 1 b b c c c c . . . 
-    c b b b b b b b b b c c . . . . 
-    c b 1 f f 1 c b b b b f . . . . 
-    f f 1 f f 1 f b b b b f c . . . 
-    f f 2 2 2 2 f b b b b f c c . . 
-    . f 2 2 2 2 b b b b c f . . . . 
-    . . f b b b b b b c f . . . . . 
-    . . . f f f f f f f . . . . . . 
-    `, SpriteKind.Enemy),
-[img`
-    f f f . . . . . . . . f f f . . 
-    c b b c f . . . . . . c c f f . 
-    . c b b c f . . . . . . c c f f 
-    . c c c b f . . . . . . c f c f 
-    . c c b b c f . c c . c c f f f 
-    . c b b c b f c c 3 c c 3 c f f 
-    . c b c c b f c b 3 c b 3 b f f 
-    . . c c c b b c b 1 b b b 1 c . 
-    . . . c c c c b b 1 b b b 1 c . 
-    . . . . c c b b b b b b b b b c 
-    . . . . f b b b b c 1 f f 1 b c 
-    . . . c f b b b b f 1 f f 1 f f 
-    . . c c f b b b b f 2 2 2 2 f f 
-    . . . . f c b b b b 2 2 2 2 f . 
-    . . . . . f c b b b b b b f . . 
-    . . . . . . f f f f f f f . . . 
-    `,img`
-    . . . . . . . . . . . f f f . . 
-    f f f . . . . . . . . c c f f f 
-    c b b c f . . . c c . c c c f f 
-    . c b b b f f c c 3 c c 3 c f f 
-    . c c c b b f c b 3 c b 3 c f f 
-    . c c b c b f c b b b b b b c f 
-    . c b b c b b c b 1 b b b 1 c c 
-    . c b c c c b b b b b b b b b c 
-    . . c c c c c b b c 1 f f 1 b c 
-    . . . c f b b b b f 1 f f 1 f c 
-    . . . c f b b b b f f f f f f f 
-    . . c c f b b b b f 2 2 2 2 f f 
-    . . . . f c b b b 2 2 2 2 2 f . 
-    . . . . . f c b b b 2 2 2 f . . 
-    . . . . . . f f f f f f f . . . 
-    . . . . . . . . . . . . . . . . 
-    `,img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . c c . c c . . . 
-    . . . . . . c c c 3 c c 3 f . . 
-    . . . . . c c c b 3 c b 3 c f . 
-    . . . . f f b b b b b b b b c f 
-    . . . . f f b b b 1 b b b 1 c c 
-    . . . f f f c b b b b b b b b c 
-    . . . f f f f b b c 1 f f 1 b c 
-    . . . b b b c c b f 1 f f 1 f f 
-    . . . c c c c f b f f f f f f f 
-    . . c c c b b f b f 2 2 2 2 f f 
-    . . . c b b c c b 2 2 2 2 2 f . 
-    . . c b b c c f f b 2 2 2 f . . 
-    . c c c c c f f f f f f f . . . 
-    c c c c . . . . . . . . . . . . 
-    `,img`
-    . f f f . . . . . . . . f f f . 
-    . c b b c f . . . . . . . c f f 
-    . . c b b c f . . . . . . c c f 
-    . . c c c b f . . . . . . . f c 
-    . . c c b b f f . . . . . f f c 
-    . . c b b c b f c c . c c f f f 
-    . . c b c c b f c c c c c f f f 
-    . . . c c c b c b 3 c c 3 c f . 
-    . . . c c c c b b 3 c b 3 b c . 
-    . . . . c c b b b b b b b b c c 
-    . . . c f b b b 1 1 b b b 1 1 c 
-    . . c c f b b b b b b b b b b f 
-    . . . . f b b b b c b b b c b f 
-    . . . . f c b b b 1 f f f 1 f . 
-    . . . . . f c b b b b b b f . . 
-    . . . . . . f f f f f f f . . . 
-    `],
-100,
-true
-)
+game.onUpdateInterval(1000, function () {
+    if (sprites.allOfKind(SpriteKind.Enemy).length < 10) {
+        let batspeed = 0
+        bat = sprites.create(img`
+            . . f f f . . . . . . . . f f f 
+            . f f c c . . . . . . f c b b c 
+            f f c c . . . . . . f c b b c . 
+            f c f c . . . . . . f b c c c . 
+            f f f c c . c c . f c b b c c . 
+            f f c 3 c c 3 c c f b c b b c . 
+            f f b 3 b c 3 b c f b c c b c . 
+            . c 1 b b b 1 b c b b c c c . . 
+            . c 1 b b b 1 b b c c c c . . . 
+            c b b b b b b b b b c c . . . . 
+            c b 1 f f 1 c b b b b f . . . . 
+            f f 1 f f 1 f b b b b f c . . . 
+            f f 2 2 2 2 f b b b b f c c . . 
+            . f 2 2 2 2 b b b b c f . . . . 
+            . . f b b b b b b c f . . . . . 
+            . . . f f f f f f f . . . . . . 
+            `, SpriteKind.Enemy)
+        bat.follow(mySprite)
+        bat.x = randint(0, scene.screenWidth())
+        mySprite.setVelocity(0, -40 * batspeed)
+        bat.setFlag(SpriteFlag.AutoDestroy, true)
+    }
+})
