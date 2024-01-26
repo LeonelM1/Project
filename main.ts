@@ -18,8 +18,10 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . . . . . . . . . . . . . . 
         `, mySprite, 0, -50)
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Player, function (sprite, otherSprite) {
-	
+sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
+    sprites.destroy(mySprite)
+    scene.cameraShake(4, 500)
+    info.changeLifeBy(-1)
 })
 function buildRoom (numChests: number) {
     for (let index = 0; index < numChests; index++) {
@@ -62,6 +64,10 @@ function buildRoom (numChests: number) {
         }
     }
 }
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    sprites.destroy(bat, effects.fire, 500)
+    info.changeScoreBy(1)
+})
 let bat: Sprite = null
 let direction = ""
 let rand = 0
@@ -90,6 +96,7 @@ mySprite = sprites.create(img`
     `, SpriteKind.Player)
 tiles.placeOnRandomTile(mySprite, sprites.dungeon.darkGroundSouthEast1)
 info.setLife(3)
+info.setScore(0)
 controller.moveSprite(mySprite, 100, 100)
 scene.cameraFollowSprite(mySprite)
 buildRoom(3)
