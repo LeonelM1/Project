@@ -25,9 +25,9 @@ sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSp
 })
 info.onLifeZero(function () {
     sprites.destroy(myPlayer)
+    game.gameOver(false)
     game.setGameOverMessage(false, "GAME OVER!")
     music.play(music.melodyPlayable(music.wawawawaa), music.PlaybackMode.UntilDone)
-    game.gameOver(false)
     game.reset()
 })
 function buildRoom (numChests: number) {
@@ -67,7 +67,6 @@ function buildRoom (numChests: number) {
                 c += -1
                 direction = "left"
             }
-            pause(500)
         }
     }
 }
@@ -75,7 +74,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
     sprites.destroy(otherSprite, effects.disintegrate, 500)
     info.changeScoreBy(1)
 })
-let bat: Sprite = null
+let EnemySprite: Sprite = null
 let direction = ""
 let rand = 0
 let c = 0
@@ -103,33 +102,7 @@ myPlayer = sprites.create(img`
     `, SpriteKind.Player)
 let SpawnLocation = tiles.getTilesByType(sprites.dungeon.darkGroundCenter)
 let EnemyImages = [
-sprites.create(img`
-    ........................
-    ........................
-    ........................
-    ........................
-    ..........ffff..........
-    ........ff1111ff3.......
-    .......fb111111bf.......
-    .......f11111111f.......
-    ......fd11111111df......
-    ......fd11111111df......
-    ......fddd1111dddf......
-    ......fbdbfddfbdbf......
-    ......fcdcf11fcdcf......
-    .......fb111111bf.......
-    ......fffcdb1bdffff.....
-    ....fc111cbfbfc111cf....
-    ....f1b1b1ffff1b1b1f....
-    ....fbfbffffffbfbfbf....
-    .........ffffff.........
-    ...........fff..........
-    ........................
-    ........................
-    ........................
-    ........................
-    `, SpriteKind.Enemy),
-sprites.create(img`
+img`
     . . . . . . . . . . . . . . 
     e e e . . . . e e e . . . . 
     c d d c . . c d d c . . . . 
@@ -144,8 +117,8 @@ sprites.create(img`
     . f d d d d d d d f f f f . 
     . . f d b d f d f . . . . . 
     . . . f f f f f f . . . . . 
-    `, SpriteKind.Enemy),
-sprites.create(img`
+    `,
+img`
     . . . . . c c c c c c c . . . . 
     . . . . c 6 7 7 7 7 7 6 c . . . 
     . . . c 7 c 6 6 6 6 c 7 6 c . . 
@@ -162,8 +135,8 @@ sprites.create(img`
     f 6 1 1 1 1 1 6 6 6 6 6 6 c . . 
     . f 6 1 1 1 1 1 6 6 6 6 c . . . 
     . . f f c c c c c c c c . . . . 
-    `, SpriteKind.Enemy),
-sprites.create(img`
+    `,
+img`
     ...........fffffff...ccfff..........
     ..........fbbbbbbbffcbbbbf..........
     ..........fbb111bbbbbffbf...........
@@ -180,8 +153,8 @@ sprites.create(img`
     ............cc1111fbdbbfdddc...fbbf.
     ..............cccfffbdbbfcc.....fbbf
     ....................fffff........fff
-    `, SpriteKind.Enemy),
-sprites.create(img`
+    `,
+img`
     ........................
     ........................
     ..........ccc...........
@@ -206,8 +179,8 @@ sprites.create(img`
     ...ccdddccddddbcbbcc....
     ...ccccccd555ddccc......
     ........cccccccc........
-    `, SpriteKind.Enemy),
-sprites.create(img`
+    `,
+img`
     . . f f f . . . . . . . . f f f 
     . f f c c . . . . . . f c b b c 
     f f c c . . . . . . f c b b c . 
@@ -224,7 +197,7 @@ sprites.create(img`
     . f 2 2 2 2 b b b b c f . . . . 
     . . f b b b b b b c f . . . . . 
     . . . f f f f f f f . . . . . . 
-    `, SpriteKind.Enemy)
+    `
 ]
 info.setLife(3)
 info.setScore(0)
@@ -232,29 +205,10 @@ tiles.placeOnRandomTile(myPlayer, sprites.dungeon.darkGroundCenter)
 controller.moveSprite(myPlayer, 100, 100)
 scene.cameraFollowSprite(myPlayer)
 buildRoom(3)
-let EnemySprite = sprites.create(EnemyImages._pickRandom(), SpriteKind.Enemy)
-tiles.placeOnRandomTile(EnemySprite, SpawnLocation.removeAt(randint(0, SpawnLocation.length) - 1))
 game.onUpdateInterval(1000, function () {
     if (sprites.allOfKind(SpriteKind.Enemy).length < 10) {
-        bat = sprites.create(img`
-            . . f f f . . . . . . . . f f f 
-            . f f c c . . . . . . f c b b c 
-            f f c c . . . . . . f c b b c . 
-            f c f c . . . . . . f b c c c . 
-            f f f c c . c c . f c b b c c . 
-            f f c 3 c c 3 c c f b c b b c . 
-            f f b 3 b c 3 b c f b c c b c . 
-            . c 1 b b b 1 b c b b c c c . . 
-            . c 1 b b b 1 b b c c c c . . . 
-            c b b b b b b b b b c c . . . . 
-            c b 1 f f 1 c b b b b f . . . . 
-            f f 1 f f 1 f b b b b f c . . . 
-            f f 2 2 2 2 f b b b b f c c . . 
-            . f 2 2 2 2 b b b b c f . . . . 
-            . . f b b b b b b c f . . . . . 
-            . . . f f f f f f f . . . . . . 
-            `, SpriteKind.Enemy)
-        bat.follow(myPlayer, 50)
-        bat.x = randint(0, scene.screenWidth())
+        EnemySprite = sprites.create(EnemyImages._pickRandom(), SpriteKind.Enemy)
+        EnemySprite.follow(myPlayer, 25)
+        tiles.placeOnTile(EnemySprite, SpawnLocation.removeAt(randint(0, SpawnLocation.length) - 1))
     }
 })
