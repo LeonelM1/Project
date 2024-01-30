@@ -1,5 +1,5 @@
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    projectile2 = sprites.createProjectileFromSprite(img`
+    fireBall = sprites.createProjectileFromSprite(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -16,12 +16,19 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `, mySprite, 0, -50)
+        `, myPlayer, 0, -50)
 })
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
-    sprites.destroy(mySprite)
+    sprites.destroy(sprite)
     scene.cameraShake(4, 500)
     info.changeLifeBy(-1)
+})
+info.onLifeZero(function () {
+    sprites.destroy(myPlayer)
+    game.setGameOverMessage(false, "GAME OVER!")
+    music.play(music.melodyPlayable(music.wawawawaa), music.PlaybackMode.UntilDone)
+    game.gameOver(false)
+    game.reset()
 })
 function buildRoom (numChests: number) {
     for (let index = 0; index < numChests; index++) {
@@ -52,20 +59,20 @@ function buildRoom (numChests: number) {
                 direction = "up"
             } else if (rand == 1 && !(direction == "left")) {
                 c += 1
-                direction = "left"
+                direction = "right"
             } else if (rand == 2 && !(direction == "up")) {
                 r += 1
                 direction = "down"
             } else {
                 c += -1
-                direction = "right"
+                direction = "left"
             }
             pause(500)
         }
     }
 }
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
-    sprites.destroy(bat, effects.fire, 500)
+    sprites.destroy(otherSprite, effects.disintegrate, 500)
     info.changeScoreBy(1)
 })
 let bat: Sprite = null
@@ -73,10 +80,10 @@ let direction = ""
 let rand = 0
 let c = 0
 let r = 0
-let projectile2: Sprite = null
-let mySprite: Sprite = null
+let fireBall: Sprite = null
+let myPlayer: Sprite = null
 tiles.setCurrentTilemap(tilemap`template`)
-mySprite = sprites.create(img`
+myPlayer = sprites.create(img`
     . . . . . f f f f . . . . . . . 
     . . . f f e e e e f f . . . . . 
     . . f e e e f f e e e f . . . . 
@@ -94,15 +101,141 @@ mySprite = sprites.create(img`
     . . . . f f f f f f . . . . . . 
     . . . . f f . . f f . . . . . . 
     `, SpriteKind.Player)
-tiles.placeOnRandomTile(mySprite, sprites.dungeon.darkGroundSouthEast1)
+let SpawnLocation = tiles.getTilesByType(sprites.dungeon.darkGroundCenter)
+let EnemyImages = [
+sprites.create(img`
+    ........................
+    ........................
+    ........................
+    ........................
+    ..........ffff..........
+    ........ff1111ff3.......
+    .......fb111111bf.......
+    .......f11111111f.......
+    ......fd11111111df......
+    ......fd11111111df......
+    ......fddd1111dddf......
+    ......fbdbfddfbdbf......
+    ......fcdcf11fcdcf......
+    .......fb111111bf.......
+    ......fffcdb1bdffff.....
+    ....fc111cbfbfc111cf....
+    ....f1b1b1ffff1b1b1f....
+    ....fbfbffffffbfbfbf....
+    .........ffffff.........
+    ...........fff..........
+    ........................
+    ........................
+    ........................
+    ........................
+    `, SpriteKind.Enemy),
+sprites.create(img`
+    . . . . . . . . . . . . . . 
+    e e e . . . . e e e . . . . 
+    c d d c . . c d d c . . . . 
+    c b d d f f d d b c . . . . 
+    c 3 b d d b d b 3 c . . . . 
+    f b 3 d d d d 3 b f . . . . 
+    e d d d d d d d d e . . . . 
+    e d f d d d d f d e . b f b 
+    f d d f d d f d d f . f d f 
+    f b d d b b d d 2 b f f d f 
+    . f 2 2 2 2 2 2 d b b d b f 
+    . f d d d d d d d f f f f . 
+    . . f d b d f d f . . . . . 
+    . . . f f f f f f . . . . . 
+    `, SpriteKind.Enemy),
+sprites.create(img`
+    . . . . . c c c c c c c . . . . 
+    . . . . c 6 7 7 7 7 7 6 c . . . 
+    . . . c 7 c 6 6 6 6 c 7 6 c . . 
+    . . c 6 7 6 f 6 6 f 6 7 7 c . . 
+    . . c 7 7 7 7 7 7 7 7 7 7 c . . 
+    . . f 7 8 1 f f 1 6 7 7 7 f . . 
+    . . f 6 f 1 f f 1 f 7 7 7 f . . 
+    . . . f f 2 2 2 2 f 7 7 6 f . . 
+    . . c c f 2 2 2 2 7 7 6 f c . . 
+    . c 7 7 7 7 7 7 7 7 c c 7 7 c . 
+    c 7 1 1 1 7 7 7 7 f c 6 7 7 7 c 
+    f 1 1 1 1 1 7 6 f c c 6 6 6 c c 
+    f 1 1 1 1 1 1 6 6 c 6 6 6 c . . 
+    f 6 1 1 1 1 1 6 6 6 6 6 6 c . . 
+    . f 6 1 1 1 1 1 6 6 6 6 c . . . 
+    . . f f c c c c c c c c . . . . 
+    `, SpriteKind.Enemy),
+sprites.create(img`
+    ...........fffffff...ccfff..........
+    ..........fbbbbbbbffcbbbbf..........
+    ..........fbb111bbbbbffbf...........
+    ..........fb11111ffbbbbff...........
+    ..........f1cccc1ffbbbbbcff.........
+    ..........ffc1c1c1bbcbcbcccf........
+    ...........fcc3331bbbcbcbcccf..ccccc
+    ............c333c1bbbcbcbccccfcddbbc
+    ............c333c1bbbbbbbcccccddbcc.
+    ............c333c11bbbbbccccccbbcc..
+    ...........cc331c11bbbbccccccfbccf..
+    ...........cc13c11cbbbcccccbbcfccf..
+    ...........c111111cbbbfdddddc.fbbcf.
+    ............cc1111fbdbbfdddc...fbbf.
+    ..............cccfffbdbbfcc.....fbbf
+    ....................fffff........fff
+    `, SpriteKind.Enemy),
+sprites.create(img`
+    ........................
+    ........................
+    ..........ccc...........
+    .........cccc...........
+    .....ccccccc..ccc.......
+    ...cc555555cccccc.......
+    ..c5555555555bcc........
+    .c555555555555b..cc.....
+    c555551ff555555bccc.....
+    c55d55ff55555555bc......
+    c5555555555555555b......
+    .cbb31bb5555dd555b.cc...
+    .c5333b555ddddd55dccc...
+    .c533b55ddddddddddb.....
+    .c5555dddbb55bdddddccc..
+    ..ccccbbbb555bdddddccc..
+    ...cdcbc5555bddddddcc...
+    ....ccbc55bc5ddddddbcccc
+    .....cbbcc5555dddddddddc
+    .....ccbbb555ddbddddddc.
+    .....cdcbc55ddbbbdddcc..
+    ...ccdddccddddbcbbcc....
+    ...ccccccd555ddccc......
+    ........cccccccc........
+    `, SpriteKind.Enemy),
+sprites.create(img`
+    . . f f f . . . . . . . . f f f 
+    . f f c c . . . . . . f c b b c 
+    f f c c . . . . . . f c b b c . 
+    f c f c . . . . . . f b c c c . 
+    f f f c c . c c . f c b b c c . 
+    f f c 3 c c 3 c c f b c b b c . 
+    f f b 3 b c 3 b c f b c c b c . 
+    . c 1 b b b 1 b c b b c c c . . 
+    . c 1 b b b 1 b b c c c c . . . 
+    c b b b b b b b b b c c . . . . 
+    c b 1 f f 1 c b b b b f . . . . 
+    f f 1 f f 1 f b b b b f c . . . 
+    f f 2 2 2 2 f b b b b f c c . . 
+    . f 2 2 2 2 b b b b c f . . . . 
+    . . f b b b b b b c f . . . . . 
+    . . . f f f f f f f . . . . . . 
+    `, SpriteKind.Enemy)
+]
 info.setLife(3)
 info.setScore(0)
-controller.moveSprite(mySprite, 100, 100)
-scene.cameraFollowSprite(mySprite)
+tiles.placeOnRandomTile(myPlayer, sprites.dungeon.darkGroundCenter)
+controller.moveSprite(myPlayer, 100, 100)
+scene.cameraFollowSprite(myPlayer)
 buildRoom(3)
+let EnemySprite = sprites.create(EnemyImages._pickRandom(), SpriteKind.Enemy)
+tiles.placeOnRandomTile(EnemySprite, SpawnLocation.removeAt(randint(0, SpawnLocation.length) - 1))
 game.onUpdateInterval(1000, function () {
     if (sprites.allOfKind(SpriteKind.Enemy).length < 10) {
-        let batspeed = 0
         bat = sprites.create(img`
             . . f f f . . . . . . . . f f f 
             . f f c c . . . . . . f c b b c 
@@ -121,9 +254,7 @@ game.onUpdateInterval(1000, function () {
             . . f b b b b b b c f . . . . . 
             . . . f f f f f f f . . . . . . 
             `, SpriteKind.Enemy)
-        bat.follow(mySprite)
+        bat.follow(myPlayer, 50)
         bat.x = randint(0, scene.screenWidth())
-        mySprite.setVelocity(0, -40 * batspeed)
-        bat.setFlag(SpriteFlag.AutoDestroy, true)
     }
 })
